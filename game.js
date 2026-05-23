@@ -11,8 +11,8 @@ const startButton = document.getElementById("startButton");
 const BEST_SCORE_KEY = "foodCatchGameBestScore";
 const BASE_FOOD_SPEED = 180;
 const RANDOM_FOOD_SPEED = 120;
-const SPEED_UP_PER_SECOND = 8;
-const MAX_FOOD_SPEED_BONUS = 520;
+const SPEED_UP_PER_SECOND = 14;
+const MAX_FOOD_SPEED_BONUS = 760;
 
 let width;
 let height;
