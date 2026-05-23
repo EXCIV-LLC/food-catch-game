@@ -96,6 +96,23 @@ canvas {
   letter-spacing: 0;
 }
 
+.difficulty-options {
+  width: min(86%, 320px);
+  display: grid;
+  gap: 10px;
+}
+
+.difficulty-button {
+  width: 100%;
+  border: 3px solid #333;
+  background: #fff7d7;
+  color: #333;
+}
+
+.difficulty-button:hover {
+  background: #ffe7a3;
+}
+
 #message.hidden {
   display: none;
 }
@@ -165,6 +182,11 @@ button {
     width: min(92%, 320px);
     min-height: 48px;
     font-size: 12px;
+  }
+
+  .difficulty-options {
+    width: min(92%, 300px);
+    gap: 8px;
   }
 
   button {
