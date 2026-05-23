@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120">
+  <defs>
+    <linearGradient id="titleGradient" x1="0" x2="1">
+      <stop offset="0" stop-color="#ff8a00"/>
+      <stop offset=".55" stop-color="#ff4f4f"/>
+      <stop offset="1" stop-color="#1f9c5b"/>
+    </linearGradient>
+  </defs>
+  <path d="M28 32h304c13 0 24 11 24 24s-11 24-24 24H28C15 80 4 69 4 56s11-24 24-24z" fill="#fff7d7" stroke="#333" stroke-width="6"/>
+  <text x="180" y="72" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="900" fill="url(#titleGradient)" stroke="#333" stroke-width="2" paint-order="stroke">
+    Food Catch!
+  </text>
+</svg>

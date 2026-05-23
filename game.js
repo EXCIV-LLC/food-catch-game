@@ -4,6 +4,7 @@ const ctx = canvas.getContext("2d");
 const gameWrap = document.getElementById("gameWrap");
 const scoreText = document.getElementById("scoreText");
 const bestScoreText = document.getElementById("bestScoreText");
+const titleBestScoreText = document.getElementById("titleBestScoreText");
 const lifeText = document.getElementById("lifeText");
 const message = document.getElementById("message");
 const startButton = document.getElementById("startButton");
@@ -24,6 +25,7 @@ let isPlaying = false;
 let lastTime = 0;
 let spawnTimer = 0;
 let elapsedTime = 0;
+let audioContext = null;
 
 const player = {
   x: 0,
@@ -64,6 +66,44 @@ function updateBestScore() {
   }
 }
 
+function getAudioContext() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+
+  return audioContext;
+}
+
+function playTone(frequency, duration, type, startGain) {
+  const context = getAudioContext();
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  const now = context.currentTime;
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, now);
+  gain.gain.setValueAtTime(startGain, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+  oscillator.start(now);
+  oscillator.stop(now + duration);
+}
+
+function playCatchSound() {
+  playTone(660, 0.08, "sine", 0.22);
+  setTimeout(() => playTone(990, 0.1, "sine", 0.18), 45);
+}
+
+function playMissSound() {
+  playTone(180, 0.22, "sawtooth", 0.18);
+}
+
 function loadGameImage(src) {
   const image = new Image();
   image.src = src;
@@ -92,6 +132,8 @@ function resizeCanvas() {
 }
 
 function startGame() {
+  getAudioContext();
+
   score = 0;
   life = 3;
   foods.length = 0;
@@ -139,6 +181,7 @@ function update(deltaTime) {
     if (isHit(food)) {
       foods.splice(i, 1);
       score += 10;
+      playCatchSound();
       updateBestScore();
       updateUI();
       continue;
@@ -146,6 +189,7 @@ function update(deltaTime) {
 
     if (food.y > height + 40) {
       foods.splice(i, 1);
+      playMissSound();
       life--;
       updateUI();
 
@@ -216,6 +260,7 @@ function gameOver() {
 function updateUI() {
   scoreText.textContent = score;
   bestScoreText.textContent = bestScore;
+  titleBestScoreText.textContent = bestScore;
   lifeText.textContent = life;
 }
 
