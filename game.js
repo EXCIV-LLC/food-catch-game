@@ -15,7 +15,7 @@ const RANDOM_FOOD_SPEED = 120;
 const SPEED_UP_PER_SECOND = 14;
 const MAX_FOOD_SPEED_BONUS = 760;
 const START_FOOD_LIMIT = 1;
-const EXTRA_FOOD_INTERVAL = 18;
+const EXTRA_FOOD_INTERVAL = 10;
 const MAX_ACTIVE_FOODS = 4;
 
 let width;
@@ -209,19 +209,15 @@ function fillFoods() {
   const foodLimit = getActiveFoodLimit();
 
   while (foods.length < foodLimit) {
-    spawnFood(foods.length, foodLimit);
+    spawnFood();
   }
 }
 
-function spawnFood(index, total) {
+function spawnFood() {
   const speedBonus = Math.min(elapsedTime * SPEED_UP_PER_SECOND, MAX_FOOD_SPEED_BONUS);
-  const laneWidth = width / total;
-  const laneLeft = laneWidth * index;
-  const minX = Math.max(30, laneLeft + 30);
-  const maxX = Math.min(width - 30, laneLeft + laneWidth - 30);
 
   foods.push({
-    x: minX + Math.random() * Math.max(1, maxX - minX),
+    x: 30 + Math.random() * (width - 60),
     y: -30 - Math.random() * 80,
     size: 40,
     speed: BASE_FOOD_SPEED + speedBonus + Math.random() * RANDOM_FOOD_SPEED,
