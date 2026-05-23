@@ -34,7 +34,14 @@ const player = {
 };
 
 const foods = [];
-const foodIcons = ["🍎", "🍙", "🍔", "🍓", "🥕"];
+const foodImages = [
+  loadGameImage("assets/apple.svg"),
+  loadGameImage("assets/rice-ball.svg"),
+  loadGameImage("assets/burger.svg"),
+  loadGameImage("assets/strawberry.svg"),
+  loadGameImage("assets/carrot.svg")
+];
+const basketImage = loadGameImage("assets/basket.svg");
 
 const keys = {
   left: false,
@@ -55,6 +62,17 @@ function updateBestScore() {
     bestScore = score;
     saveBestScore();
   }
+}
+
+function loadGameImage(src) {
+  const image = new Image();
+  image.src = src;
+  image.addEventListener("load", () => {
+    if (!isPlaying) {
+      draw();
+    }
+  });
+  return image;
 }
 
 function resizeCanvas() {
@@ -146,7 +164,7 @@ function spawnFood() {
     y: -30,
     size: 40,
     speed: BASE_FOOD_SPEED + speedBonus + Math.random() * RANDOM_FOOD_SPEED,
-    icon: foodIcons[Math.floor(Math.random() * foodIcons.length)]
+    image: foodImages[Math.floor(Math.random() * foodImages.length)]
   });
 }
 
@@ -160,24 +178,24 @@ function draw() {
   ctx.clearRect(0, 0, width, height);
 
   for (const food of foods) {
-    ctx.font = `${food.size}px sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(food.icon, food.x, food.y);
+    drawCenteredImage(food.image, food.x, food.y, food.size, food.size);
   }
 
-  ctx.fillStyle = "#8b5a2b";
-  ctx.fillRect(
-    player.x - player.width / 2,
-    player.y - player.height / 2,
-    player.width,
-    player.height
-  );
+  drawCenteredImage(basketImage, player.x, player.y, player.width, player.height);
+}
 
-  ctx.font = "28px sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("🧺", player.x, player.y);
+function drawCenteredImage(image, x, y, drawWidth, drawHeight) {
+  if (!image.complete || image.naturalWidth === 0) {
+    return;
+  }
+
+  ctx.drawImage(
+    image,
+    x - drawWidth / 2,
+    y - drawHeight / 2,
+    drawWidth,
+    drawHeight
+  );
 }
 
 function gameOver() {
