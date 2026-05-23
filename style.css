@@ -82,6 +82,20 @@ canvas {
   font-weight: bold;
 }
 
+.ad-placeholder {
+  width: min(88%, 320px);
+  min-height: 56px;
+  display: grid;
+  place-items: center;
+  border: 2px dashed rgba(51, 51, 51, 0.55);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.62);
+  color: #5f6670;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0;
+}
+
 #message.hidden {
   display: none;
 }
@@ -145,6 +159,12 @@ button {
     min-width: 130px;
     padding: 7px 12px;
     font-size: 18px;
+  }
+
+  .ad-placeholder {
+    width: min(92%, 320px);
+    min-height: 48px;
+    font-size: 12px;
   }
 
   button {
