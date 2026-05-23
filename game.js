@@ -7,7 +7,6 @@ const bestScoreText = document.getElementById("bestScoreText");
 const titleBestScoreText = document.getElementById("titleBestScoreText");
 const lifeText = document.getElementById("lifeText");
 const message = document.getElementById("message");
-const startButton = document.getElementById("startButton");
 
 const BEST_SCORE_KEY = "foodCatchGameBestScore";
 const BASE_FOOD_SPEED = 180;
@@ -265,15 +264,41 @@ function gameOver() {
     <p>Score: ${score}</p>
     <p>Best: ${bestScore}</p>
     <button id="restartButton">RETRY</button>
+    <button id="titleButton" class="secondary-button">TITLE</button>
   `;
 
   document.getElementById("restartButton").addEventListener("click", startGame);
+  document.getElementById("titleButton").addEventListener("click", showTitleScreen);
+}
+
+function showTitleScreen() {
+  isPlaying = false;
+  foods.length = 0;
+  score = 0;
+  life = 3;
+  elapsedTime = 0;
+  updateUI();
+  draw();
+
+  message.classList.remove("hidden");
+  message.innerHTML = `
+    <img class="title-logo" src="assets/logo.svg" alt="Food Catch!" />
+    <img class="title-character" src="assets/mascot.svg" alt="カゴのキャラクター" />
+    <p class="title-best">Best: <span id="titleBestScoreText">0</span></p>
+    <p>落ちてくる食べ物をキャッチしよう！</p>
+    <button id="startButton">START</button>
+  `;
+  document.getElementById("startButton").addEventListener("click", startGame);
+  updateUI();
 }
 
 function updateUI() {
   scoreText.textContent = score;
   bestScoreText.textContent = bestScore;
-  titleBestScoreText.textContent = bestScore;
+  const currentTitleBestScoreText = document.getElementById("titleBestScoreText");
+  if (currentTitleBestScoreText) {
+    currentTitleBestScoreText.textContent = bestScore;
+  }
   lifeText.textContent = life;
 }
 
@@ -294,7 +319,7 @@ gameWrap.addEventListener("pointermove", (e) => {
   player.x = e.clientX - rect.left;
 });
 
-startButton.addEventListener("click", startGame);
+document.getElementById("startButton").addEventListener("click", startGame);
 window.addEventListener("resize", resizeCanvas);
 
 resizeCanvas();

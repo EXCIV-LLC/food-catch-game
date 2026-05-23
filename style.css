@@ -96,6 +96,10 @@ button {
   color: white;
 }
 
+.secondary-button {
+  background: #5f7f95;
+}
+
 @media (max-width: 420px) {
   body {
     align-items: stretch;
