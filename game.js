@@ -16,6 +16,20 @@ const MAX_FOOD_SPEED_BONUS = 760;
 const START_FOOD_LIMIT = 1;
 const EXTRA_FOOD_INTERVAL = 10;
 const MAX_ACTIVE_FOODS = 4;
+const DIFFICULTIES = {
+  easy: {
+    label: "やさしい",
+    speedMultiplier: 0.65
+  },
+  normal: {
+    label: "ふつう",
+    speedMultiplier: 0.82
+  },
+  hard: {
+    label: "難しい",
+    speedMultiplier: 1
+  }
+};
 
 let width;
 let height;
@@ -27,6 +41,7 @@ let isPlaying = false;
 let lastTime = 0;
 let elapsedTime = 0;
 let audioContext = null;
+let selectedDifficulty = DIFFICULTIES.hard;
 
 const player = {
   x: 0,
@@ -132,9 +147,10 @@ function resizeCanvas() {
   player.y = height - 80;
 }
 
-function startGame() {
+function startGame(difficulty = selectedDifficulty) {
   getAudioContext();
 
+  selectedDifficulty = difficulty;
   score = 0;
   life = 3;
   foods.length = 0;
@@ -214,12 +230,13 @@ function fillFoods() {
 
 function spawnFood() {
   const speedBonus = Math.min(elapsedTime * SPEED_UP_PER_SECOND, MAX_FOOD_SPEED_BONUS);
+  const baseSpeed = BASE_FOOD_SPEED + speedBonus + Math.random() * RANDOM_FOOD_SPEED;
 
   foods.push({
     x: 30 + Math.random() * (width - 60),
     y: -30 - Math.random() * 80,
     size: 40,
-    speed: BASE_FOOD_SPEED + speedBonus + Math.random() * RANDOM_FOOD_SPEED,
+    speed: baseSpeed * selectedDifficulty.speedMultiplier,
     image: foodImages[Math.floor(Math.random() * foodImages.length)]
   });
 }
@@ -262,6 +279,27 @@ function getAdPlaceholderHtml() {
   `;
 }
 
+function showDifficultyScreen() {
+  message.classList.remove("hidden");
+  message.innerHTML = `
+    <img class="title-logo" src="assets/logo.svg" alt="Food Catch!" />
+    <h1>難易度を選択</h1>
+    <div class="difficulty-options">
+      <button class="difficulty-button" data-difficulty="easy">やさしい</button>
+      <button class="difficulty-button" data-difficulty="normal">ふつう</button>
+      <button class="difficulty-button" data-difficulty="hard">難しい</button>
+    </div>
+    <button id="backToTitleButton" class="secondary-button">TITLE</button>
+  `;
+
+  document.querySelectorAll(".difficulty-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      startGame(DIFFICULTIES[button.dataset.difficulty]);
+    });
+  });
+  document.getElementById("backToTitleButton").addEventListener("click", showTitleScreen);
+}
+
 function gameOver() {
   isPlaying = false;
   updateBestScore();
@@ -276,7 +314,7 @@ function gameOver() {
     ${getAdPlaceholderHtml()}
   `;
 
-  document.getElementById("restartButton").addEventListener("click", startGame);
+  document.getElementById("restartButton").addEventListener("click", () => startGame(selectedDifficulty));
   document.getElementById("titleButton").addEventListener("click", showTitleScreen);
 }
 
@@ -298,7 +336,7 @@ function showTitleScreen() {
     <button id="startButton">START</button>
     ${getAdPlaceholderHtml()}
   `;
-  document.getElementById("startButton").addEventListener("click", startGame);
+  document.getElementById("startButton").addEventListener("click", showDifficultyScreen);
   updateUI();
 }
 
@@ -329,7 +367,7 @@ gameWrap.addEventListener("pointermove", (e) => {
   player.x = e.clientX - rect.left;
 });
 
-document.getElementById("startButton").addEventListener("click", startGame);
+document.getElementById("startButton").addEventListener("click", showDifficultyScreen);
 window.addEventListener("resize", resizeCanvas);
 
 resizeCanvas();
