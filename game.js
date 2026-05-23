@@ -3,14 +3,18 @@ const ctx = canvas.getContext("2d");
 
 const gameWrap = document.getElementById("gameWrap");
 const scoreText = document.getElementById("scoreText");
+const bestScoreText = document.getElementById("bestScoreText");
 const lifeText = document.getElementById("lifeText");
 const message = document.getElementById("message");
 const startButton = document.getElementById("startButton");
+
+const BEST_SCORE_KEY = "foodCatchGameBestScore";
 
 let width;
 let height;
 
 let score = 0;
+let bestScore = loadBestScore();
 let life = 3;
 let isPlaying = false;
 let lastTime = 0;
@@ -31,6 +35,22 @@ const keys = {
   left: false,
   right: false
 };
+
+function loadBestScore() {
+  const savedScore = Number(localStorage.getItem(BEST_SCORE_KEY));
+  return Number.isFinite(savedScore) && savedScore > 0 ? savedScore : 0;
+}
+
+function saveBestScore() {
+  localStorage.setItem(BEST_SCORE_KEY, String(bestScore));
+}
+
+function updateBestScore() {
+  if (score > bestScore) {
+    bestScore = score;
+    saveBestScore();
+  }
+}
 
 function resizeCanvas() {
   const rect = gameWrap.getBoundingClientRect();
@@ -93,6 +113,7 @@ function update(deltaTime) {
     if (isHit(food)) {
       foods.splice(i, 1);
       score += 10;
+      updateBestScore();
       updateUI();
       continue;
     }
@@ -151,10 +172,13 @@ function draw() {
 
 function gameOver() {
   isPlaying = false;
+  updateBestScore();
+  updateUI();
   message.classList.remove("hidden");
   message.innerHTML = `
     <h1>Game Over</h1>
     <p>Score: ${score}</p>
+    <p>Best: ${bestScore}</p>
     <button id="restartButton">RETRY</button>
   `;
 
@@ -163,6 +187,7 @@ function gameOver() {
 
 function updateUI() {
   scoreText.textContent = score;
+  bestScoreText.textContent = bestScore;
   lifeText.textContent = life;
 }
 
@@ -187,4 +212,5 @@ startButton.addEventListener("click", startGame);
 window.addEventListener("resize", resizeCanvas);
 
 resizeCanvas();
+updateUI();
 draw();
