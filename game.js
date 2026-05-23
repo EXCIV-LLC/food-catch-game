@@ -254,6 +254,14 @@ function drawCenteredImage(image, x, y, drawWidth, drawHeight) {
   );
 }
 
+function getAdPlaceholderHtml() {
+  return `
+    <div class="ad-placeholder" aria-label="広告枠">
+      <span>AD SPACE</span>
+    </div>
+  `;
+}
+
 function gameOver() {
   isPlaying = false;
   updateBestScore();
@@ -265,6 +273,7 @@ function gameOver() {
     <p>Best: ${bestScore}</p>
     <button id="restartButton">RETRY</button>
     <button id="titleButton" class="secondary-button">TITLE</button>
+    ${getAdPlaceholderHtml()}
   `;
 
   document.getElementById("restartButton").addEventListener("click", startGame);
@@ -287,6 +296,7 @@ function showTitleScreen() {
     <p class="title-best">Best: <span id="titleBestScoreText">0</span></p>
     <p>落ちてくる食べ物をキャッチしよう！</p>
     <button id="startButton">START</button>
+    ${getAdPlaceholderHtml()}
   `;
   document.getElementById("startButton").addEventListener("click", startGame);
   updateUI();
