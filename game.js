@@ -14,12 +14,9 @@ const BASE_FOOD_SPEED = 180;
 const RANDOM_FOOD_SPEED = 120;
 const SPEED_UP_PER_SECOND = 14;
 const MAX_FOOD_SPEED_BONUS = 760;
-const START_SPAWN_INTERVAL = 0.85;
-const MIN_SPAWN_INTERVAL = 0.35;
-const SPAWN_INTERVAL_REDUCTION_PER_SECOND = 0.01;
-const START_FOODS_PER_SPAWN = 2;
-const EXTRA_FOOD_INTERVAL = 12;
-const MAX_FOODS_PER_SPAWN = 5;
+const START_FOOD_LIMIT = 1;
+const EXTRA_FOOD_INTERVAL = 18;
+const MAX_ACTIVE_FOODS = 4;
 
 let width;
 let height;
@@ -29,7 +26,6 @@ let bestScore = loadBestScore();
 let life = 3;
 let isPlaying = false;
 let lastTime = 0;
-let spawnTimer = 0;
 let elapsedTime = 0;
 let audioContext = null;
 
@@ -143,9 +139,9 @@ function startGame() {
   score = 0;
   life = 3;
   foods.length = 0;
-  spawnTimer = 0;
   elapsedTime = 0;
   isPlaying = true;
+  fillFoods();
 
   updateUI();
   message.classList.add("hidden");
@@ -174,12 +170,7 @@ function update(deltaTime) {
 
   player.x = Math.max(player.width / 2, Math.min(width - player.width / 2, player.x));
 
-  spawnTimer += deltaTime;
-  const spawnInterval = getSpawnInterval();
-  if (spawnTimer >= spawnInterval) {
-    spawnTimer = 0;
-    spawnFoods();
-  }
+  fillFoods();
 
   for (let i = foods.length - 1; i >= 0; i--) {
     const food = foods[i];
@@ -207,25 +198,18 @@ function update(deltaTime) {
   }
 }
 
-function getSpawnInterval() {
-  return Math.max(
-    MIN_SPAWN_INTERVAL,
-    START_SPAWN_INTERVAL - elapsedTime * SPAWN_INTERVAL_REDUCTION_PER_SECOND
-  );
-}
-
-function getFoodsPerSpawn() {
+function getActiveFoodLimit() {
   return Math.min(
-    MAX_FOODS_PER_SPAWN,
-    START_FOODS_PER_SPAWN + Math.floor(elapsedTime / EXTRA_FOOD_INTERVAL)
+    MAX_ACTIVE_FOODS,
+    START_FOOD_LIMIT + Math.floor(elapsedTime / EXTRA_FOOD_INTERVAL)
   );
 }
 
-function spawnFoods() {
-  const foodCount = getFoodsPerSpawn();
+function fillFoods() {
+  const foodLimit = getActiveFoodLimit();
 
-  for (let i = 0; i < foodCount; i++) {
-    spawnFood(i, foodCount);
+  while (foods.length < foodLimit) {
+    spawnFood(foods.length, foodLimit);
   }
 }
 
