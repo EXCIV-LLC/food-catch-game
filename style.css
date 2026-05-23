@@ -1,6 +1,7 @@
 body {
   margin: 0;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: #bdefff;
   display: flex;
@@ -13,10 +14,12 @@ body {
   position: relative;
   width: min(100vw, 480px);
   height: min(100vh, 800px);
+  height: min(100dvh, 800px);
   background: linear-gradient(#bdefff, #fff1b8);
   border: 4px solid #333;
   border-radius: 20px;
   overflow: hidden;
+  touch-action: none;
 }
 
 canvas {
@@ -35,12 +38,15 @@ canvas {
   gap: 8px;
   font-size: 20px;
   font-weight: bold;
+  pointer-events: none;
 }
 
 #ui > div {
+  min-width: 0;
   padding: 4px 8px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
 }
 
 #message {
@@ -88,4 +94,68 @@ button {
   border-radius: 999px;
   background: orange;
   color: white;
+}
+
+@media (max-width: 420px) {
+  body {
+    align-items: stretch;
+  }
+
+  #gameWrap {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    border: none;
+    border-radius: 0;
+  }
+
+  #ui {
+    top: calc(8px + env(safe-area-inset-top));
+    left: 8px;
+    right: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  #ui > div {
+    padding: 5px 4px;
+    text-align: center;
+  }
+
+  #message {
+    gap: 12px;
+    padding: 20px;
+  }
+
+  .title-logo {
+    width: min(88%, 320px);
+  }
+
+  .title-character {
+    width: min(48%, 150px);
+  }
+
+  .title-best {
+    min-width: 130px;
+    padding: 7px 12px;
+    font-size: 18px;
+  }
+
+  button {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 340px) {
+  #ui {
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  #ui > div {
+    padding: 4px 3px;
+  }
 }
