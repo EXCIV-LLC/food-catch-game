@@ -9,6 +9,10 @@ const message = document.getElementById("message");
 const startButton = document.getElementById("startButton");
 
 const BEST_SCORE_KEY = "foodCatchGameBestScore";
+const BASE_FOOD_SPEED = 180;
+const RANDOM_FOOD_SPEED = 120;
+const SPEED_UP_PER_SECOND = 8;
+const MAX_FOOD_SPEED_BONUS = 520;
 
 let width;
 let height;
@@ -19,6 +23,7 @@ let life = 3;
 let isPlaying = false;
 let lastTime = 0;
 let spawnTimer = 0;
+let elapsedTime = 0;
 
 const player = {
   x: 0,
@@ -73,6 +78,7 @@ function startGame() {
   life = 3;
   foods.length = 0;
   spawnTimer = 0;
+  elapsedTime = 0;
   isPlaying = true;
 
   updateUI();
@@ -95,6 +101,8 @@ function gameLoop(time) {
 }
 
 function update(deltaTime) {
+  elapsedTime += deltaTime;
+
   if (keys.left) player.x -= player.speed * deltaTime;
   if (keys.right) player.x += player.speed * deltaTime;
 
@@ -131,11 +139,13 @@ function update(deltaTime) {
 }
 
 function spawnFood() {
+  const speedBonus = Math.min(elapsedTime * SPEED_UP_PER_SECOND, MAX_FOOD_SPEED_BONUS);
+
   foods.push({
     x: 30 + Math.random() * (width - 60),
     y: -30,
     size: 40,
-    speed: 180 + Math.random() * 120,
+    speed: BASE_FOOD_SPEED + speedBonus + Math.random() * RANDOM_FOOD_SPEED,
     icon: foodIcons[Math.floor(Math.random() * foodIcons.length)]
   });
 }
