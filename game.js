@@ -15,19 +15,21 @@ const SPEED_UP_PER_SECOND = 14;
 const MAX_FOOD_SPEED_BONUS = 760;
 const START_FOOD_LIMIT = 1;
 const EXTRA_FOOD_INTERVAL = 10;
-const MAX_ACTIVE_FOODS = 4;
 const DIFFICULTIES = {
   easy: {
     label: "やさしい",
-    speedMultiplier: 0.65
+    speedMultiplier: 0.65,
+    maxActiveFoods: 2
   },
   normal: {
     label: "ふつう",
-    speedMultiplier: 0.82
+    speedMultiplier: 0.82,
+    maxActiveFoods: 3
   },
   hard: {
-    label: "難しい",
-    speedMultiplier: 1
+    label: "むずかしい",
+    speedMultiplier: 1,
+    maxActiveFoods: 4
   }
 };
 
@@ -215,7 +217,7 @@ function update(deltaTime) {
 
 function getActiveFoodLimit() {
   return Math.min(
-    MAX_ACTIVE_FOODS,
+    selectedDifficulty.maxActiveFoods,
     START_FOOD_LIMIT + Math.floor(elapsedTime / EXTRA_FOOD_INTERVAL)
   );
 }
@@ -287,7 +289,7 @@ function showDifficultyScreen() {
     <div class="difficulty-options">
       <button class="difficulty-button" data-difficulty="easy">やさしい</button>
       <button class="difficulty-button" data-difficulty="normal">ふつう</button>
-      <button class="difficulty-button" data-difficulty="hard">難しい</button>
+      <button class="difficulty-button" data-difficulty="hard">むずかしい</button>
     </div>
     <button id="backToTitleButton" class="secondary-button">TITLE</button>
   `;
@@ -309,6 +311,7 @@ function gameOver() {
     <h1>Game Over</h1>
     <p>Score: ${score}</p>
     <p>Best: ${bestScore}</p>
+    <p>Difficulty: ${selectedDifficulty.label}</p>
     <button id="restartButton">RETRY</button>
     <button id="titleButton" class="secondary-button">TITLE</button>
     ${getAdPlaceholderHtml()}
