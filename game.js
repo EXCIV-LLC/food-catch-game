@@ -14,11 +14,12 @@ const BASE_FOOD_SPEED = 180;
 const RANDOM_FOOD_SPEED = 120;
 const SPEED_UP_PER_SECOND = 14;
 const MAX_FOOD_SPEED_BONUS = 760;
-const START_SPAWN_INTERVAL = 1;
+const START_SPAWN_INTERVAL = 0.85;
 const MIN_SPAWN_INTERVAL = 0.35;
 const SPAWN_INTERVAL_REDUCTION_PER_SECOND = 0.01;
-const EXTRA_FOOD_INTERVAL = 18;
-const MAX_FOODS_PER_SPAWN = 4;
+const START_FOODS_PER_SPAWN = 2;
+const EXTRA_FOOD_INTERVAL = 12;
+const MAX_FOODS_PER_SPAWN = 5;
 
 let width;
 let height;
@@ -216,7 +217,7 @@ function getSpawnInterval() {
 function getFoodsPerSpawn() {
   return Math.min(
     MAX_FOODS_PER_SPAWN,
-    1 + Math.floor(elapsedTime / EXTRA_FOOD_INTERVAL)
+    START_FOODS_PER_SPAWN + Math.floor(elapsedTime / EXTRA_FOOD_INTERVAL)
   );
 }
 
@@ -237,7 +238,7 @@ function spawnFood(index, total) {
 
   foods.push({
     x: minX + Math.random() * Math.max(1, maxX - minX),
-    y: -30,
+    y: -30 - Math.random() * 80,
     size: 40,
     speed: BASE_FOOD_SPEED + speedBonus + Math.random() * RANDOM_FOOD_SPEED,
     image: foodImages[Math.floor(Math.random() * foodImages.length)]
