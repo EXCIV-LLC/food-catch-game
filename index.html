@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Catch Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="gameWrap">
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="ui">
+      <div>Score: <span id="scoreText">0</span></div>
+      <div>Life: <span id="lifeText">3</span></div>
+    </div>
+
+    <div id="message">
+      <h1>Food Catch!</h1>
+      <p>落ちてくる食べ物をキャッチしよう！</p>
+      <button id="startButton">START</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
