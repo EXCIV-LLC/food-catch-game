@@ -14,6 +14,11 @@ const BASE_FOOD_SPEED = 180;
 const RANDOM_FOOD_SPEED = 120;
 const SPEED_UP_PER_SECOND = 14;
 const MAX_FOOD_SPEED_BONUS = 760;
+const START_SPAWN_INTERVAL = 1;
+const MIN_SPAWN_INTERVAL = 0.35;
+const SPAWN_INTERVAL_REDUCTION_PER_SECOND = 0.01;
+const EXTRA_FOOD_INTERVAL = 18;
+const MAX_FOODS_PER_SPAWN = 4;
 
 let width;
 let height;
@@ -169,9 +174,10 @@ function update(deltaTime) {
   player.x = Math.max(player.width / 2, Math.min(width - player.width / 2, player.x));
 
   spawnTimer += deltaTime;
-  if (spawnTimer >= 1) {
+  const spawnInterval = getSpawnInterval();
+  if (spawnTimer >= spawnInterval) {
     spawnTimer = 0;
-    spawnFood();
+    spawnFoods();
   }
 
   for (let i = foods.length - 1; i >= 0; i--) {
@@ -200,11 +206,37 @@ function update(deltaTime) {
   }
 }
 
-function spawnFood() {
+function getSpawnInterval() {
+  return Math.max(
+    MIN_SPAWN_INTERVAL,
+    START_SPAWN_INTERVAL - elapsedTime * SPAWN_INTERVAL_REDUCTION_PER_SECOND
+  );
+}
+
+function getFoodsPerSpawn() {
+  return Math.min(
+    MAX_FOODS_PER_SPAWN,
+    1 + Math.floor(elapsedTime / EXTRA_FOOD_INTERVAL)
+  );
+}
+
+function spawnFoods() {
+  const foodCount = getFoodsPerSpawn();
+
+  for (let i = 0; i < foodCount; i++) {
+    spawnFood(i, foodCount);
+  }
+}
+
+function spawnFood(index, total) {
   const speedBonus = Math.min(elapsedTime * SPEED_UP_PER_SECOND, MAX_FOOD_SPEED_BONUS);
+  const laneWidth = width / total;
+  const laneLeft = laneWidth * index;
+  const minX = Math.max(30, laneLeft + 30);
+  const maxX = Math.min(width - 30, laneLeft + laneWidth - 30);
 
   foods.push({
-    x: 30 + Math.random() * (width - 60),
+    x: minX + Math.random() * Math.max(1, maxX - minX),
     y: -30,
     size: 40,
     speed: BASE_FOOD_SPEED + speedBonus + Math.random() * RANDOM_FOOD_SPEED,
