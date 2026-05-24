@@ -13,6 +13,8 @@ const BASE_FOOD_SPEED = 180;
 const RANDOM_FOOD_SPEED = 120;
 const SPEED_UP_PER_SECOND = 14;
 const MAX_FOOD_SPEED_BONUS = 760;
+const MAX_LIFE = 3;
+const LIFE_ITEM_CHANCE = 0.12;
 const START_FOOD_LIMIT = 1;
 const EXTRA_FOOD_INTERVAL = 10;
 const DIFFICULTIES = {
@@ -61,6 +63,7 @@ const foodImages = [
   loadGameImage("assets/strawberry.svg"),
   loadGameImage("assets/carrot.svg")
 ];
+const lifeImage = loadGameImage("assets/life.svg");
 const basketImage = loadGameImage("assets/basket.svg");
 
 const keys = {
@@ -154,7 +157,7 @@ function startGame(difficulty = selectedDifficulty) {
 
   selectedDifficulty = difficulty;
   score = 0;
-  life = 3;
+  life = MAX_LIFE;
   foods.length = 0;
   elapsedTime = 0;
   isPlaying = true;
@@ -195,7 +198,11 @@ function update(deltaTime) {
 
     if (isHit(food)) {
       foods.splice(i, 1);
-      score += 10;
+      if (food.type === "life") {
+        life = Math.min(MAX_LIFE, life + 1);
+      } else {
+        score += 10;
+      }
       playCatchSound();
       updateBestScore();
       updateUI();
@@ -204,12 +211,14 @@ function update(deltaTime) {
 
     if (food.y > height + 40) {
       foods.splice(i, 1);
-      playMissSound();
-      life--;
-      updateUI();
+      if (food.type !== "life") {
+        playMissSound();
+        life--;
+        updateUI();
 
-      if (life <= 0) {
-        gameOver();
+        if (life <= 0) {
+          gameOver();
+        }
       }
     }
   }
@@ -233,13 +242,15 @@ function fillFoods() {
 function spawnFood() {
   const speedBonus = Math.min(elapsedTime * SPEED_UP_PER_SECOND, MAX_FOOD_SPEED_BONUS);
   const baseSpeed = BASE_FOOD_SPEED + speedBonus + Math.random() * RANDOM_FOOD_SPEED;
+  const isLifeItem = Math.random() < LIFE_ITEM_CHANCE;
 
   foods.push({
     x: 30 + Math.random() * (width - 60),
     y: -30 - Math.random() * 80,
     size: 40,
     speed: baseSpeed * selectedDifficulty.speedMultiplier,
-    image: foodImages[Math.floor(Math.random() * foodImages.length)]
+    image: isLifeItem ? lifeImage : foodImages[Math.floor(Math.random() * foodImages.length)],
+    type: isLifeItem ? "life" : "score"
   });
 }
 
@@ -325,7 +336,7 @@ function showTitleScreen() {
   isPlaying = false;
   foods.length = 0;
   score = 0;
-  life = 3;
+  life = MAX_LIFE;
   elapsedTime = 0;
   updateUI();
   draw();
