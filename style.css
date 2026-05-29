@@ -93,6 +93,12 @@ canvas {
   color: #ef476f;
 }
 
+.hud-life #lifeText {
+  overflow: visible;
+  text-overflow: clip;
+  letter-spacing: -1px;
+}
+
 #speedGauge {
   position: absolute;
   top: 77px;
@@ -363,6 +369,11 @@ button:active {
     font-size: 14px;
   }
 
+  .hud-life #lifeText {
+    font-size: 13px;
+    letter-spacing: -2px;
+  }
+
   #speedGauge {
     top: calc(62px + env(safe-area-inset-top));
     left: 8px;
@@ -433,6 +444,11 @@ button:active {
 
   .hud-card span:last-child {
     font-size: 12px;
+  }
+
+  .hud-life #lifeText {
+    font-size: 11px;
+    letter-spacing: -2px;
   }
 
   .screen-subtitle,
