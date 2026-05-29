@@ -3,24 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Food Catch Game</title>
-  <link rel="stylesheet" href="style.css?v=20260524" />
+  <meta name="theme-color" content="#121826" />
+  <title>Food Catch Rush</title>
+  <link rel="stylesheet" href="style.css?v=20260529d" />
 </head>
 <body>
   <div id="gameWrap">
     <canvas id="gameCanvas"></canvas>
 
     <div id="ui">
-      <div>Score: <span id="scoreText">0</span></div>
-      <div>Best: <span id="bestScoreText">0</span></div>
-      <div>Life: <span id="lifeText">3</span></div>
+      <div class="hud-card hud-score">
+        <span class="hud-label">Score</span>
+        <span id="scoreText">0</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Best</span>
+        <span id="bestScoreText">0</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Life</span>
+        <span id="lifeText">3</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Combo</span>
+        <span id="comboText">0</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Time</span>
+        <span id="timeText">0</span>
+      </div>
+    </div>
+    <div id="speedGauge" aria-live="polite">
+      <span id="speedGaugeLabel">Speed Lv</span>
+      <span id="speedGaugeTrack"><span id="speedGaugeFill"></span></span>
+      <span id="speedGaugeValue">1</span>
     </div>
 
     <div id="message">
       <img class="title-logo" src="assets/logo.svg" alt="Food Catch!" />
       <img class="title-character" src="assets/mascot.svg" alt="カゴのキャラクター" />
-      <p class="title-best">Best: <span id="titleBestScoreText">0</span></p>
-      <p>落ちてくる食べ物をキャッチしよう！</p>
+      <p class="title-best">Best <span id="titleBestScoreText">0</span></p>
+      <p class="title-copy">フードを集めて、コンボをつなぐキャッチアクション。</p>
       <button id="startButton">START</button>
       <div class="ad-placeholder" aria-label="広告枠">
         <span>AD SPACE</span>
@@ -28,6 +51,6 @@
     </div>
   </div>
 
-  <script src="game.js?v=20260524"></script>
+  <script src="game.js?v=20260529d"></script>
 </body>
 </html>
